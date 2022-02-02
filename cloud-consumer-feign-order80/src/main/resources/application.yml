@@ -5,3 +5,24 @@ eureka:
     register-with-eureka: false
     service-url:
       defaultZone: http://eureka7001.com:7001/eureka, http://eureka7002.com:7002/eureka
+
+
+CLOUD-PAYMENT-SERVICE: # 这个是指服务提供者spring.application.name
+# 设置feign客户端超时时间(OpenFeign默认支持Ribbon)
+  ribbon:
+    # 配置负载均衡规则 默认轮询
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule #配置规则 随机
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule #配置规则 轮询
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RetryRule #配置规则 重试
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.WeightedResponseTimeRule #配置规则 响应时间权重
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.BestAvailableRule #配置规则 最空闲连接策略
+    ConnectTimeout: 5000 #请求连接超时时间
+    ReadTimeout: 5000 #请求处理的超时时间
+#    OkToRetryOnAllOperations: true #对所有请求都进行重试
+#    MaxAutoRetriesNextServer: 2 #切换实例的重试次数
+#    MaxAutoRetries: 1 #对当前实例的重试次数
+
+logging:
+  level:
+    # feign日志以什么级别监控哪个接口
+    com.mrlqq.springcloud.service.PaymentFeignService: debug

@@ -2,10 +2,8 @@ package com.mrlqq.springcloud.service;
 
 import com.mrlqq.springcloud.entities.CommonResult;
 import com.mrlqq.springcloud.entities.Payment;
-import feign.Param;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,4 +27,7 @@ public interface PaymentFeignService {
 
     @GetMapping("/payment/discovery")
     Object discovery();
+
+    @GetMapping( "/payment/feign/timeout")
+    String paymentFeignTimeout();
 }

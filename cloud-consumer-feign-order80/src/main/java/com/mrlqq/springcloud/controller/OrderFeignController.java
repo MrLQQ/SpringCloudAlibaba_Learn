@@ -35,4 +35,10 @@ public class OrderFeignController {
     public Object discovery(){
         return paymentFeignService.discovery();
     }
+
+    @GetMapping( "/consumer/payment/feign/timeout")
+    public String paymentFeignTimeout(){
+        // OpenFeign 底层是ribbon  客户端一般默认等待1秒钟，但是我们故意暂停3秒钟
+        return paymentFeignService.paymentFeignTimeout();
+    }
 }
