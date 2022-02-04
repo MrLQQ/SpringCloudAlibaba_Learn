@@ -1,10 +1,11 @@
 package cpm.mrlqq.springcloud.service;
 
+import cn.hutool.core.util.IdUtil;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import java.beans.IntrospectionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,5 +44,27 @@ public class PaymentService {
 
     public String paymentInfo_TimeOutHandler(Integer id){
         return "线程池：" + Thread.currentThread().getName() + " 系统繁忙，请稍后再试,id:" + id + "\t" + "fallback" ;
+    }
+
+    // =====服务熔断
+    @HystrixCommand(fallbackMethod = "paymentCircuitBreaker_fallback", commandProperties = {
+            // 是否开启熔断器
+            @HystrixProperty(name = "circuitBreaker.enabled",value = "true"),
+            // 断路器熔断的最小值阀值，如果单位时间内（具体时间以sleepWindowInMilliseconds为准）请求小于这个值，断路器永远不会熔断
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold",value = "10"),
+            // 调用链路熔断后，一定时间后(默认5秒)，将再次重试调用run()方法，检测是否需要闭合调用链路。
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds",value = "10000"),
+            // 在一定时间范围内（默认10秒）错误率达到或超过配置值时，执行熔断操作
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage",value = "60"),
+    })
+    public String paymentCircuitBreaker(@PathVariable("id") Integer id){
+        if (id < 0){
+            throw new RuntimeException("******id 不能为负数");
+        }
+        String serialNumber = IdUtil.simpleUUID();
+        return Thread.currentThread().getName()+"\t" + "调用成功，流水号：" + serialNumber;
+    }
+    public String paymentCircuitBreaker_fallback(@PathVariable("id") Integer id){
+        return "id不能为负数，请稍后再试……";
     }
 }
