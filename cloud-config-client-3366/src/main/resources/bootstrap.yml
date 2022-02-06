@@ -1,5 +1,5 @@
 server:
-  port: 3355
+  port: 3366
 
 spring:
   application:
@@ -20,12 +20,11 @@ spring:
           destination: busExchange  # 表示要使用的Exchange名称定义
           content-type: application/json  # 设置消息类型，本次为json
           binder: defaultRabbit   # 设置要兵的消息服务的具体设置
-    # config客户但配置
     config:
-      label: master # 分支名称
-      name: config  # 配置文件名称
-      profile: dev  # 读取后缀名名称 综合上述3个会读取config-dev.yml
-      uri: http://localhost:3344  # 配置中心地址
+      label: master
+      name: config
+      profile: dev
+      uri: http://localhost:3344
 eureka:
   client:
     service-url:

@@ -3,7 +3,22 @@ server:
 spring:
   application:
     name: cloud-config-center #注册金eureka服务器的微服务名字
+  rabbitmq:
+    host: 8.136.9.12
+    port: 5672
+    username: guest
+    password: guest
   cloud:
+    stream:
+      # 在此处配置要绑定的rabbitmq的服务信息；
+      binders:
+        defaultRabbit:  # 表示定义的名称，用于于binding整合
+          type: rabbit  # 消息组件类型
+      bindings:   # 服务的整合处理
+        output:   # 这个名字是一个通道的名称
+          destination: busExchange  # 表示要使用的Exchange名称定义
+          content-type: application/json  # 设置消息类型，本次为json
+          binder: defaultRabbit   # 设置要兵的消息服务的具体设置
     config:
       server:
         git:
@@ -14,8 +29,16 @@ spring:
       # 读取分支
       label: master
 
+
 # 服务注册到eureka地址
 eureka:
   client:
     service-url:
       defaultZone:  http://localhost:7001/eureka
+
+# 暴露bus刷新配置的端点
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'bus-refresh'
